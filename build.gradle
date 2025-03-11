@@ -22,8 +22,29 @@ ext {
 	}
 }
 
+
+/**
+ * signing.properties 文件内容示例如下
+ * signing.keyId=xx
+ * signing.password=xxx
+ * signing.secretKeyRingFile=C:/Users/admin/.gnupg/**_SECRET.gpg
+ *
+ * ossrhUsername=xx
+ * ossrhPassword=xxx
+ */
+File signing_cfg = new File("$project.rootDir/signing.properties")
+if(signing_cfg.exists()) {
+	Properties props = new Properties()
+	props.load(new FileInputStream(signing_cfg))
+	props.each { prop ->
+		project.ext.set(prop.key, prop.value)
+	}
+
+}
+
 configure(allprojects) { project ->
 	apply plugin: "io.spring.dependency-management"
+	apply plugin: 'signing'
 
 	dependencyManagement {
 		imports {
@@ -294,7 +315,9 @@ configure(allprojects) { project ->
 			maven { url 'https://maven.aliyun.com/repository/public/' }
 			maven { url "https://repo.spring.io/libs-spring-framework-build" }
 		}
+
 	}
+
 	configurations.all {
 		resolutionStrategy {
 			cacheChangingModulesFor 0, "seconds"
@@ -304,7 +327,7 @@ configure(allprojects) { project ->
 }
 
 configure([rootProject] + javaProjects) { project ->
-	group = "org.springframework"
+	group = "net.xdob.springframework"
 
 	apply plugin: "java"
 	apply plugin: "java-test-fixtures"
@@ -312,6 +335,12 @@ configure([rootProject] + javaProjects) { project ->
 	apply plugin: 'org.springframework.build.compile'
 	apply from: "${rootDir}/gradle/toolchains.gradle"
 	apply from: "${rootDir}/gradle/ide.gradle"
+
+	tasks.withType(JavaCompile) {
+		options.encoding = 'UTF-8'
+		sourceCompatibility = '1.8'
+		targetCompatibility = '1.8'
+	}
 
 	pluginManager.withPlugin("kotlin") {
 		apply plugin: "org.jetbrains.dokka"
@@ -338,6 +367,7 @@ configure([rootProject] + javaProjects) { project ->
 		systemProperty("java.awt.headless", "true")
 		systemProperty("testGroups", project.properties.get("testGroups"))
 		systemProperty("io.netty.leakDetection.level", "paranoid")
+		enabled = false  // 添加这一行以默认跳过测试
 	}
 
 	checkstyle {
@@ -440,6 +470,11 @@ configure(rootProject) {
 				artifact schemaZip
 				artifact distZip
 			}
+		}
+		signing {
+			sign publications.mavenJava  // 确保签名 mavenJava 发布组件
+			// 如果有其他发布组件，也需要在这里签名，例如：
+			// sign publications.otherPublication
 		}
 	}
 

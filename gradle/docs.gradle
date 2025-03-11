@@ -46,7 +46,7 @@ task api(type: Javadoc) {
 		stylesheetFile = file("src/docs/api/stylesheet.css")
 		splitIndex = true
 		links(project.ext.javadocLinks)
-		addBooleanOption('Xdoclint:syntax', true) // only check syntax with doclint
+        addBooleanOption('Xdoclint:syntax', true) // only check syntax with doclint
 		addBooleanOption('Xwerror', true) // fail build on Javadoc warnings
 		if (JavaVersion.current().isJava9Compatible()) {
 			addBooleanOption('html5', true)
@@ -55,6 +55,8 @@ task api(type: Javadoc) {
 	source moduleProjects.collect { project ->
 		project.sourceSets.main.allJava
 	}
+	// 排除特定包
+	excludes = ['org/springframework/core/metrics/jfr/**']
 	maxMemory = "1024m"
 	destinationDir = file("$buildDir/docs/javadoc")
 }

@@ -3,7 +3,7 @@ description = "Spring Framework (Bill of Materials)"
 apply plugin: 'java-platform'
 apply from: "$rootDir/gradle/publications.gradle"
 
-group = "org.springframework"
+group = "net.xdob.springframework"
 
 dependencies {
 	constraints {
@@ -19,5 +19,10 @@ publishing {
 			artifactId = 'spring-framework-bom'
 			from components.javaPlatform
 		}
+	}
+	signing {
+		sign publications.mavenJava  // 确保签名 mavenJava 发布组件
+		// 如果有其他发布组件，也需要在这里签名，例如：
+		// sign publications.otherPublication
 	}
 }

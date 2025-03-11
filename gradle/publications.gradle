@@ -8,7 +8,7 @@ publishing {
 					name = project.description
 					description = project.description
 				}
-				url = "https://github.com/spring-projects/spring-framework"
+				url = "https://github.com/dibyang/spring-framework"
 				organization {
 					name = "Spring IO"
 					url = "https://spring.io/projects/spring-framework"
@@ -21,9 +21,9 @@ publishing {
 					}
 				}
 				scm {
-					url = "https://github.com/spring-projects/spring-framework"
-					connection = "scm:git:git://github.com/spring-projects/spring-framework"
-					developerConnection = "scm:git:git://github.com/spring-projects/spring-framework"
+					url = "https://github.com/dibyang/spring-framework"
+					connection = "scm:git:git://github.com/dibyang/spring-framework"
+					developerConnection = "scm:git:git://github.com/dibyang/spring-framework"
 				}
 				developers {
 					developer {
@@ -58,7 +58,12 @@ void configureDeploymentRepository(Project project) {
 			publishing.repositories.maven {
 				it.url = project.property("deploymentRepository")
 				it.name = "deployment"
+				it.credentials {
+					it.username = project.property("ossrhUsername")
+					it.password = project.property("ossrhPassword")
+				}
 			}
+
 		}
 	}
 }

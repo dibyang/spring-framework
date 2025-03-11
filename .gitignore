@@ -49,3 +49,4 @@ atlassian-ide-plugin.xml
 .vscode/
 
 cached-antora-playbook.yml
+/signing.properties
