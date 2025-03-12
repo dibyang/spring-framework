@@ -463,19 +463,19 @@ configure(rootProject) {
 		maxHeapSize = "1g"
 	}
 
-	publishing {
-		publications {
-			mavenJava(MavenPublication) {
-				artifact docsZip
-				artifact schemaZip
-				artifact distZip
-			}
-		}
-		signing {
-			sign publications.mavenJava  // 确保签名 mavenJava 发布组件
-			// 如果有其他发布组件，也需要在这里签名，例如：
-			// sign publications.otherPublication
-		}
-	}
+//	publishing {
+//		publications {
+//			mavenJava(MavenPublication) {
+//				artifact docsZip
+//				artifact schemaZip
+//				artifact distZip
+//			}
+//		}
+//		signing {
+//			sign publications.mavenJava  // 确保签名 mavenJava 发布组件
+//			// 如果有其他发布组件，也需要在这里签名，例如：
+//			// sign publications.otherPublication
+//		}
+//	}
 
 }

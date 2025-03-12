@@ -70,7 +70,8 @@ class PathResourceLookupFunction implements Function<ServerRequest, Optional<Res
 		}
 
 		try {
-			Resource resource = this.location.createRelative(path);
+			String cleanedPath = StringUtils.cleanPath(path);
+			Resource resource = this.location.createRelative(cleanedPath);
 			if (resource.isReadable() && isResourceUnderLocation(resource)) {
 				return Optional.of(resource);
 			}
@@ -101,6 +102,7 @@ class PathResourceLookupFunction implements Function<ServerRequest, Optional<Res
 	}
 
 	private boolean isInvalidPath(String path) {
+		System.out.println("path = " + path);
 		if (path.contains("WEB-INF") || path.contains("META-INF")) {
 			return true;
 		}
@@ -110,8 +112,9 @@ class PathResourceLookupFunction implements Function<ServerRequest, Optional<Res
 				return true;
 			}
 		}
-		return path.contains("..") && StringUtils.cleanPath(path).contains("../");
+		return path.contains("..")&&StringUtils.cleanPath(path).contains("../");
 	}
+
 
 	private boolean isResourceUnderLocation(Resource resource) throws IOException {
 		if (resource.getClass() != this.location.getClass()) {

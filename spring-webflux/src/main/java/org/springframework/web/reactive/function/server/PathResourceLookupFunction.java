@@ -71,7 +71,8 @@ class PathResourceLookupFunction implements Function<ServerRequest, Mono<Resourc
 		}
 
 		try {
-			Resource resource = this.location.createRelative(path);
+			String cleanedPath = StringUtils.cleanPath(path);
+			Resource resource = this.location.createRelative(cleanedPath);
 			if (resource.isReadable() && isResourceUnderLocation(resource)) {
 				return Mono.just(resource);
 			}
