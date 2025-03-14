@@ -49,21 +49,18 @@ publishing {
 	}
 }
 
-configureDeploymentRepository(project)
-
-void configureDeploymentRepository(Project project) {
-	project.plugins.withType(MavenPublishPlugin.class).all {
-		PublishingExtension publishing = project.getExtensions().getByType(PublishingExtension.class);
-		if (project.hasProperty("deploymentRepository")) {
-			publishing.repositories.maven {
-				it.url = project.property("deploymentRepository")
-				it.name = "deployment"
-				it.credentials {
-					it.username = project.property("ossrhUsername")
-					it.password = project.property("ossrhPassword")
-				}
+project.plugins.withType(MavenPublishPlugin.class).all {
+	PublishingExtension publishing = project.getExtensions().getByType(PublishingExtension.class);
+	if (project.hasProperty("releasesRepository")) {
+		publishing.repositories.maven {
+			def releasesRepository = project.property("releasesRepository")
+			def snapshotsRepository = project.property("snapshotsRepository")
+			it.url = version.endsWith('SNAPSHOT') ? snapshotsRepository : releasesRepository
+			it.name = "deployment"
+			it.credentials {
+				it.username = project.property("ossrhUsername")
+				it.password = project.property("ossrhPassword")
 			}
-
 		}
 	}
 }
